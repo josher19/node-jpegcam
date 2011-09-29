@@ -1,0 +1,15 @@
+Summary
+-------
+Port of the excellent jpegcam to node.
+* Replaced test.php with a node lib/server.js to serve static files and upload jpegs.
+* Could not use `formidable` because the upload type is image/jpeg rather than a normal multipart form submit.
+* Want to minify amount of external dependencies (node librarires) required.
+* Should work all the way back to node 0.2.26!
+
+Resources
+---------
+* Original PHP scripts and ActionScript code: http://code.google.com/p/jpegcam/
+* Example port to ASP.NET: http://forums.asp.net/t/next/1687495
+
+->> Josh W <<-
+2011-09-30

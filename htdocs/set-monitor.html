@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>JPEGCam Monitor</title>
+	<meta name="generator" content="geany">
+	<meta name="author" content="Joshua S. Weinstein">
+	<!-- Date: 2011-09-28 -->
+</head>
+<body>
+	<table><tr><td valign=top>
+	<h1>JPEGCam Monitor</h1>
+	<h3>Capture and upload a new webcam snapshot once<span id=showTime> per 5 minutes</span>.</h3>
+	
+	<h4>Please click "Allow" and then "Start".</h4>
+	
+	<!-- First, include the JPEGCam JavaScript Library -->
+	<script type="text/javascript" src="webcam.js"></script>
+	
+	<!-- Configure a few settings -->
+	<script language="JavaScript">
+		webcam.set_api_url( 'test.php' );
+		webcam.set_quality( 90 ); // JPEG quality (1 - 100)
+		webcam.set_shutter_sound( false ); // play shutter click sound
+	</script>
+	
+	<!-- Next, write the movie to the page at 320x240 -->
+	<script language="JavaScript">
+		document.write( webcam.get_html(320, 240) );
+	</script>
+	
+	<!-- Some buttons for controlling things -->
+	<br/><form id=webcamForm name=webcamForm>
+		<input type=button value="Configure..." onClick="webcam.configure()">
+		<!--
+		&nbsp;&nbsp;
+		<input type=button value="Capture" onClick="webcam.freeze()">
+		&nbsp;&nbsp;
+		<input type=button value="Upload" onClick="do_upload()">
+		&nbsp;&nbsp;
+		<input type=button value="Reset" onClick="webcam.reset()">
+		-->
+		&nbsp;&nbsp;
+		<input type=button value="Take Snapshot" onClick="take_snapshot()">
+		&nbsp;&nbsp;
+		
+		<br />
+		<input type=number size="2" maxlength="3" min="0" max="720" value="00" id="hours" name="hours" title="Hours" class="timing"> :
+		<input type=number size="2" maxlength="2" min="0" max="60" value="05" id="minutes" name="minutes" title="Minutes" class="timing"> :
+		<input type=number size="2" maxlength="2" min="0" max="60" value="00" id="seconds" name="seconds" title="Seconds" class="timing">				
+		&nbsp;&nbsp;
+		<input type=button value="Start" id="restarter" onClick="timer.start()">
+		&nbsp;&nbsp;
+		<input type=button value="Stop" id="stopper" onClick="timer.stop()">
+		&nbsp;&nbsp;
+		<span id="notifier"></span>
+	</form>
+	
+	<!-- Code to handle the server response (see test.php) -->
+	<script language="JavaScript" type="text/javascript">
+		webcam.set_hook( 'onComplete', 'my_completion_handler' );
+		
+		function do_upload() {
+			// upload to server
+			document.getElementById('upload_results').innerHTML = '<h1>Uploading...</h1>';
+			webcam.upload();
+		}
+
+		function auto_upload() {
+			webcam.freeze();
+			do_upload();
+		}
+		
+		function warn_upload() {
+			var n = document.getElementById('notifier');
+			if (n) n.innerHTML = "SNAP!";
+			setTimeout(function() { n.innerHTML="" }, 1000);
+		}
+		
+		function Timer(_seconds, _callback, _notify) {
+		
+			this.timerId = null;
+			this.seconds = parseFloat(_seconds || 60 * 60); // default: 1 webcam snapshot per 60 minutes
+			this.millis = this.seconds * 1000;
+			this.callback = _callback || auto_upload;
+			this.notifyId = null;
+			this.notify = _notify || warn_upload;
+			
+			// if (this.start) this.start();
+		
+		}
+		
+		Timer.prototype = { 
+			stopper : document.getElementById('stopper'),
+			restarter : document.getElementById('restarter'),
+			setSeconds : function (_seconds) {
+				this.seconds = parseFloat(_seconds || 60 * 60); // default: 1 webcam snapshot per 60 minutes
+				this.millis = this.seconds * 1000;
+			},
+			setMinutes : function(_min) { this.setSeconds(60 * _min); },			
+			start: function() {
+				this.stop();
+				this.setSeconds( getTime() );
+				this.timerId = setInterval(this.callback, this.millis);
+				if (this.restarter) this.restarter.disabled='true';
+				if (this.stopper) this.stopper.disabled='';
+				if (typeof webcam !== "undefined") { webcam.frozen=false; webcam.reset(); }
+			},
+			stop: function() { 
+				if (this.timerId != null) { clearInterval(this.timerId); }
+				if (this.restarter) this.restarter.disabled='';
+				if (this.stopper) this.stopper.disabled='true';
+				if (this.timerId != null && typeof webcam != "undefined" && !webcam.frozen) { webcam.freeze(); webcam.frozen=true; }
+				this.timerId = null;
+			}
+		};
+		function showIf(n,t) {
+			if (n) return n+t+(n > 1 ? "s" : "");
+			return "";
+		}
+		function getTime(f) {
+			if (!f) f = document.forms.webcamForm;
+			var hours = f.hours.value - 0,
+				minutes = f.minutes.value - 0,
+				seconds = f.seconds.value - 0;
+			var totalSeconds = seconds + 60 * (minutes + 60*hours);
+			// alert(totalSeconds);
+			document.getElementById('showTime').innerHTML = " per " + [showIf(hours," hour"), showIf(minutes, " minute"), showIf(seconds, " second")].join("");
+			return totalSeconds;
+		}
+		
+		var timer = new Timer(getTime());
+		// timer.stop();
+		
+		function take_snapshot() {
+			// take snapshot and upload to server
+			document.getElementById('upload_results').innerHTML = '<h1>Uploading...</h1>';
+			if (webcam.frozen) webcam.reset();
+			webcam.snap();
+		}
+		
+		function my_completion_handler(msg) {
+			// extract URL out of PHP output
+			if (msg.match(/(http\:\/\/\S+)/)) {
+				var image_url = RegExp.$1;
+				// show JPEG image in page
+				document.getElementById('upload_results').innerHTML = 
+					'<h1>Upload Successful!</h1>' + 
+					'<h3>JPEG URL: ' + image_url + '</h3>' + 
+					'<img src="' + image_url + '">';
+				
+				// reset camera for another shot
+				webcam.reset();
+			}
+			else document.getElementById('upload_results').innerHTML = ("PHP Error: " + msg);
+		}
+	</script>
+	
+	</td><td width=50>&nbsp;</td><td valign=top>
+		<div id="upload_results" style="background-color:#eee;"></div>
+	</td></tr></table>
+</body>
+</html>
