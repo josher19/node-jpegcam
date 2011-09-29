@@ -11,5 +11,9 @@ Resources
 * Original PHP scripts and ActionScript code: http://code.google.com/p/jpegcam/
 * Example port to ASP.NET: http://forums.asp.net/t/next/1687495
 
+License
+-------
+* GNU LGPL v3 (LICENSE.txt)
+
 ->> Josh W <<-
 2011-09-30
