@@ -1,6 +1,12 @@
+node-jpegcam
+============
+
+Allows you to upload pictures taken from your webcam.
+
 Summary
 -------
 Port of the excellent jpegcam to node.
+
 * Replaced test.php with a node lib/server.js to serve static files and upload jpegs.
 * Could not use `formidable` because the upload type is image/jpeg rather than a normal multipart form submit.
 * Want to minify amount of external dependencies (node librarires) required.
