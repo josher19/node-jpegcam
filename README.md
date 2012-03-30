@@ -17,6 +17,14 @@ Resources
 * Original PHP scripts and ActionScript code: http://code.google.com/p/jpegcam/
 * Example port to ASP.NET: http://forums.asp.net/t/next/1687495
 
+TODO
+----
+* Update to Version 1.0.9
+* Nicer examples
+* Document /roll
+* getFileList('jpg')
+* Make a jQuery Mobile version
+
 License
 -------
 * [MIT](http://www.opensource.org/licenses/mit-license.php) (LICENSE.txt)
