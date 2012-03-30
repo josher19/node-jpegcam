@@ -25,9 +25,17 @@ Resources
 * Original PHP scripts and ActionScript code: http://code.google.com/p/jpegcam/
 * Example port to ASP.NET: http://forums.asp.net/t/next/1687495
 
+Testing
+-------
+Node Versions:
+
+* v0.2.26
+* v0.5.7-pre
+* v0.6.2
+
 TODO
 ----
-* Update to Version 1.0.9
+* Update to Version 1.0.9 of jpegcam webcam.swf
 * Nicer examples
 * Document /roll
 * getFileList('jpg')
