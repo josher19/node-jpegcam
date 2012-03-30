@@ -12,6 +12,14 @@ Port of the excellent jpegcam to node.
 * Want to minify amount of external dependencies (node librarires) required.
 * Should work all the way back to node 0.2.26!
 
+Requirements
+------------
+
+* NodeJS for Server
+* Web Browser
+* Flash
+* Webcam
+
 Resources
 ---------
 * Original PHP scripts and ActionScript code: http://code.google.com/p/jpegcam/
@@ -24,10 +32,12 @@ TODO
 * Document /roll
 * getFileList('jpg')
 * Make a jQuery Mobile version
+* Way to change Port (default: 8887)
 
 License
 -------
-* [MIT](http://www.opensource.org/licenses/mit-license.php) (LICENSE.txt)
+* [MIT](http://www.opensource.org/licenses/mit-license.php) (LICENSE.md)
 
 ->> Josh W <<-
+
 2011-09-30
