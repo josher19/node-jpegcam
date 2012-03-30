@@ -19,7 +19,7 @@ Resources
 
 License
 -------
-* GNU LGPL v3 (LICENSE.txt)
+* [MIT](http://www.opensource.org/licenses/mit-license.php) (LICENSE.txt)
 
 ->> Josh W <<-
 2011-09-30
