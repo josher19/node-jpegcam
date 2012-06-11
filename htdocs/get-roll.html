@@ -14,8 +14,9 @@
 <div id="datetime" >&nbsp;</div>
 
 <!-- TODO: Replace with nice graphics -->
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#stop" id="stopId" title="Stop">[x]</a> <a href="#start" id="startId" title="Start">|&gt;</a>
-<span id="playbackStatus"></span>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#start" id="startId" title="Start">Start</a> / <a href="#stop" id="stopId" title="Stop">Stop</a> <br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span id="playbackStatus"></span>
 
 	<script src="/roll"></script>
 
@@ -23,13 +24,13 @@
 	roll = roll.sort( function(a,b) { var diff = parseInt(a, 10) - parseInt(b, 10); return diff; } )
 	var tid;
 	function startPlayback() {
-		document.getElementById("playbackStatus").innerHTML = ("start playback");
+		document.getElementById("playbackStatus").innerHTML = ("started playback");
         if (tid) clearInterval(tid);
 		tid=setInterval(function() { getPic(); }, 250);
 		return false;
 	}
 	function stopPlayback() {
-		document.getElementById("playbackStatus").innerHTML = ("stop playback");
+		document.getElementById("playbackStatus").innerHTML = ("stopped playback");
 		clearInterval(tid);
 		return false;
 	}
