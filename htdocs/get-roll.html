@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>JPEGCam Monitor</title>
+	<meta name="generator" content="geany">
+	<meta name="author" content="Joshua S. Weinstein">
+</head>
+<body>
+
+<a href="#0" id="linker" onclick="getPic(); return false;"><img id="pic" src="" width="320" height="240" title="Webcam Snapshot" /></a>
+<br />
+<div id="datetime" >&nbsp;</div>
+
+<!-- TODO: Replace with nice graphics -->
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#stop" id="stopId" title="Stop">[x]</a> <a href="#start" id="startId" title="Start">|&gt;</a>
+<span id="playbackStatus"></span>
+
+	<script src="/roll"></script>
+
+	<script language="JavaScript" type="text/javascript">
+	roll = roll.sort( function(a,b) { var diff = parseInt(a, 10) - parseInt(b, 10); return diff; } )
+	var tid;
+	function startPlayback() {
+		document.getElementById("playbackStatus").innerHTML = ("start playback");
+        if (tid) clearInterval(tid);
+		tid=setInterval(function() { getPic(); }, 250);
+		return false;
+	}
+	function stopPlayback() {
+		document.getElementById("playbackStatus").innerHTML = ("stop playback");
+		clearInterval(tid);
+		return false;
+	}
+	document.getElementById("startId").onclick = startPlayback;
+	document.getElementById("stopId").onclick = stopPlayback;
+
+	function getFileDate(filename) { 
+		var t=filename.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2}).jpg/); 
+		return new Date([t[1],t[2],t[3]].join("-") + "T" + [t[4],t[5],t[6]].join(":")+"Z") 
+	}
+	function info(roll, i) {
+		return "<br/><em>&nbsp;&nbsp;&nbsp;Picture <strong>" + (i-0+1) + "</strong> of " + roll.length + "</em>";
+	}
+	function getPic(n) { 
+		if (null == n) n = getPic.n || 0;
+		if (typeof n === "string") n = n - 0;
+        if (roll && roll.length) n = n % roll.length;
+		document.getElementById("datetime").innerHTML = getFileDate(roll[n]) + info(roll, n);
+		document.getElementById("pic").src = roll[n];
+		getPic.n = n + 1;
+		document.location="#" + n;
+		return false;
+	}
+	getPic(document.location.hash.substring(1) || 0);
+	// window.onhashchange = function(ev) { getPic() }
+	</script>
+</body>
+</html>
